@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Catalogue, inventaire, garage et titres Rocket League — façon Shift.">
+  <title>BakesLeague</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="icon.svg" alt="" width="32" height="32">
+      <span>Bakes<strong>League</strong></span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" data-view="garage" role="tab">Garage</button>
+      <button class="tab" data-view="catalog" role="tab">Catalogue</button>
+      <button class="tab" data-view="inventory" role="tab">Inventaire</button>
+      <button class="tab" data-view="titles" role="tab">Titres</button>
+      <button class="tab" data-view="trade" role="tab">Échange</button>
+      <button class="tab" data-view="settings" role="tab" aria-label="Réglages">⚙</button>
+    </nav>
+  </header>
+
+  <main id="app">
+    <!-- GARAGE -->
+    <section class="view" id="view-garage">
+      <div class="player-card" id="playerCard">
+        <div class="pc-banner" id="pcBanner"></div>
+        <div class="pc-body">
+          <div class="pc-avatar" id="pcAvatar">🚗</div>
+          <div class="pc-info">
+            <input id="playerName" class="pc-name" maxlength="32" aria-label="Pseudo" placeholder="Ton pseudo">
+            <button class="pc-title" id="pcTitle" title="Changer de titre"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-preview" id="carPreview"></div>
+
+      <h2 class="section-title">Loadout</h2>
+      <div class="loadout" id="loadout"></div>
+
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <!-- CATALOGUE -->
+    <section class="view" id="view-catalog">
+      <div class="filters">
+        <input type="search" id="catSearch" placeholder="Rechercher un item (ex : Octane, Zomba, Dueling Dragons…)">
+        <select id="catSlot" aria-label="Type"></select>
+        <select id="catRarity" aria-label="Rareté"></select>
+        <select id="catSort" aria-label="Tri">
+          <option value="name">Nom A→Z</option>
+          <option value="rarity">Rareté</option>
+          <option value="slot">Type</option>
+        </select>
+        <label class="chk"><input type="checkbox" id="catTradable"> Échangeables</label>
+        <label class="chk"><input type="checkbox" id="catPaintable"> Peignables</label>
+        <label class="chk"><input type="checkbox" id="catOwned"> Possédés</label>
+        <label class="chk"><input type="checkbox" id="catWish"> Wishlist</label>
+      </div>
+      <p class="count" id="catCount"></p>
+      <div class="grid" id="catGrid"></div>
+      <button class="btn ghost more" id="catMore">Afficher plus</button>
+    </section>
+
+    <!-- INVENTAIRE -->
+    <section class="view" id="view-inventory">
+      <div class="toolbar">
+        <div>
+          <h2 class="section-title">Mon inventaire</h2>
+          <p class="muted" id="invSummary"></p>
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn primary" id="unlockAllItems">Débloquer tous les items</button>
+          <button class="btn ghost" id="lockAllItems">Retirer le déblocage</button>
+        </div>
+      </div>
+      <div class="filters">
+        <input type="search" id="invSearch" placeholder="Rechercher dans l'inventaire">
+        <select id="invSlot" aria-label="Type"></select>
+      </div>
+      <div class="list" id="invList"></div>
+    </section>
+
+    <!-- TITRES -->
+    <section class="view" id="view-titles">
+      <div class="toolbar">
+        <div>
+          <h2 class="section-title">Titres</h2>
+          <p class="muted" id="titleSummary"></p>
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn primary" id="unlockAllTitles">Débloquer tous les titres</button>
+          <button class="btn ghost" id="lockAllTitles">Tout retirer</button>
+        </div>
+      </div>
+      <div class="equipped-title">
+        <span class="muted">Titre équipé :</span>
+        <span id="equippedTitle" class="title-text"></span>
+        <button class="btn ghost small" id="unequipTitle">Retirer</button>
+      </div>
+      <div class="filters">
+        <input type="search" id="titleSearch" placeholder="Rechercher un titre (ex : Grand Champion, RLCS, Supersonic…)">
+        <label class="chk"><input type="checkbox" id="titleOwned"> Possédés</label>
+      </div>
+      <div class="chips" id="titleColors"></div>
+      <p class="count" id="titleCount"></p>
+      <div class="title-grid" id="titleGrid"></div>
+      <button class="btn ghost more" id="titleMore">Afficher plus</button>
+    </section>
+
+    <!-- ÉCHANGE -->
+    <section class="view" id="view-trade">
+      <div class="toolbar">
+        <div>
+          <h2 class="section-title">Offre d'échange</h2>
+          <p class="muted">Ajoute des items depuis le Catalogue ou l'Inventaire, puis copie l'offre.</p>
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn primary" id="copyTrade">Copier l'offre</button>
+          <button class="btn ghost" id="clearTrade">Vider</button>
+        </div>
+      </div>
+      <div class="trade">
+        <div class="trade-col">
+          <h3>[H] Je donne</h3>
+          <div class="list" id="tradeHave"></div>
+        </div>
+        <div class="trade-col">
+          <h3>[W] Je veux</h3>
+          <div class="list" id="tradeWant"></div>
+        </div>
+      </div>
+      <pre class="trade-text" id="tradeText"></pre>
+    </section>
+
+    <!-- RÉGLAGES -->
+    <section class="view" id="view-settings">
+      <h2 class="section-title">Sauvegarde</h2>
+      <p class="muted">Tes données sont enregistrées dans ce navigateur. Exporte-les pour les garder ou les transférer.</p>
+      <div class="toolbar-actions">
+        <button class="btn primary" id="exportSave">Exporter (JSON)</button>
+        <label class="btn ghost">Importer<input type="file" id="importSave" accept="application/json" hidden></label>
+        <button class="btn danger" id="resetSave">Tout réinitialiser</button>
+      </div>
+      <h2 class="section-title">À propos</h2>
+      <p class="muted" id="about"></p>
+    </section>
+  </main>
+
+  <!-- Fenêtre item -->
+  <dialog id="itemDialog" class="dialog">
+    <form method="dialog" class="dialog-inner" id="itemForm">
+      <button class="close" value="cancel" aria-label="Fermer">✕</button>
+      <div class="dlg-head">
+        <div class="dlg-icon" id="dlgIcon"></div>
+        <div>
+          <h3 id="dlgName"></h3>
+          <p id="dlgMeta" class="muted"></p>
+        </div>
+      </div>
+      <div class="dlg-flags" id="dlgFlags"></div>
+      <label class="field" id="dlgPaintField">Peinture
+        <div class="paints" id="dlgPaints"></div>
+      </label>
+      <label class="field">Certification
+        <select id="dlgCert"></select>
+      </label>
+      <label class="field">Quantité
+        <input type="number" id="dlgQty" min="1" max="999" value="1">
+      </label>
+      <div class="dlg-actions">
+        <button class="btn primary" type="button" id="dlgAdd">Ajouter à l'inventaire</button>
+        <button class="btn" type="button" id="dlgEquip">Équiper</button>
+        <button class="btn" type="button" id="dlgWish">♡ Wishlist</button>
+        <button class="btn" type="button" id="dlgWant">Ajouter en [W]</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Choix du titre depuis le garage -->
+  <dialog id="titleDialog" class="dialog">
+    <form method="dialog" class="dialog-inner">
+      <button class="close" value="cancel" aria-label="Fermer">✕</button>
+      <h3>Choisir un titre</h3>
+      <input type="search" id="tdSearch" placeholder="Rechercher parmi tes titres">
+      <div class="title-grid compact" id="tdGrid"></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data/rl-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
